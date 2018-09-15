@@ -1,6 +1,7 @@
 <h3>Your Beers</h3>
+
 <% @user.beers.each do |beer| %>
 	<ul>
-		<li><a href='/beers/<%beer.id%>'><%= beer.name %></a></li>
+		<li><a href='/beers/<%=beer.id%>'><%= beer.name %></a></li>
 	</ul>
 <%end %>

@@ -10,13 +10,22 @@ class BeersController < ApplicationController
 	end
 	
 	get '/beers/new' do
-		#if logged_in?
+		if logged_in?
 			erb :'beers/new'
-		#else
-			#redirect '/login'
-		#end
+		else
+			redirect '/login'
+		end
 	end
 	
+	get '/beers/:id' do
+		if logged_in?
+			@beer = Beer.find_by_id(params[:id])
+			erb :'beers/show'
+		else
+			redirect '/login'
+		end
+	end
+		
 	get '/beers/:id/edit' do
 		@beer = Beer.find(params[:id])
 		#if logged_in? && current_user.id == @beer.user.id
@@ -29,10 +38,10 @@ class BeersController < ApplicationController
 	end
 	
 	patch '/beers/:id' do
-	@beer = Beer.find_by_id(params[:id])
-	@beer.name = params[:name]
-	@beer.beer_type = params[:beer_type]
-	@beer.brewery = params[:brewery]
+		@beer = Beer.find_by_id(params[:id])
+		@beer.name = params[:name]
+		@beer.beer_type = params[:beer_type]
+		@beer.brewery = params[:brewery]
 	end
 	
 	post '/beers' do

@@ -1,0 +1,16 @@
+<h2>About this Beer</h2>
+
+<p>Name: <%=@beer.name%></p>
+<p>Type: <%=@beer.beer_type%></p>
+<p>Brewery: <%=@beer.brewery%></p>
+
+<p><a href="/beers/<%=@beer.id%>/edit">Click to Edit</a></p>
+<form action="/beers/<%=@beer.id%>" method="post">
+  <input type="hidden" id="hidden" name="_method" value="delete">
+  <input type="submit" value="Delete Beer">
+</form>
+
+<p><a href="/logout">Log Out</a></p>
+
+
+
