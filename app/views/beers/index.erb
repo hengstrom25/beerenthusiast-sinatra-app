@@ -1,10 +1,12 @@
-<h2>Your Beers</h2>
-<p>Click on a beer to see your personal review</p>
+<h1> Your Beers </h1>
+
 <% @beers.each do |beer| %>
-	<%= beer.name %><br>
-	<%= beer.beer_type %><br>
-	<%= beer.brewery %><br>
-	<a href="/beers/<%=beer.id%>/edit"><Edit></a>
+	<p>Beer Name: <%= beer.name %></p><br>
+	<p>Type: <%= beer.beer_type %></p><br>
+	<p>Brewery: <%= beer.brewery %></p><br>
+	<a href="/beers/<%=beer.id%>/edit">Edit this Beer</a><br>
+	<a href="/beers/<%-beer.id%>/delete">Delete this Beer</a>
+
 	<br>
 <% end %>
 
