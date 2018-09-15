@@ -14,9 +14,9 @@ ActiveRecord::Schema.define(version: 3) do
 
   create_table "beers", force: :cascade do |t|
     t.string "name"
-    t.string "type"
+    t.string "beer_type"
     t.string "brewery"
-    t.integer "users_id"
+    t.integer "user_id"
   end
 
   create_table "reviews", force: :cascade do |t|

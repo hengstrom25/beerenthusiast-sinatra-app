@@ -1,9 +1,14 @@
 <h2>Your Beers</h2>
+<p>Click on a beer to see your personal review</p>
 <% @beers.each do |beer| %>
 	<%= beer.name %><br>
-	<%= beer.type %><br>
+	<%= beer.beer_type %><br>
 	<%= beer.brewery %><br>
-	<a href='/beers/<%=beer.id%>/edit'><Edit></a>
+	<a href="/beers/<%=beer.id%>/edit"><Edit></a>
 	<br>
-	<% end %>
+<% end %>
+
+<p><a href="/beers/new">Add a New Beer</a></p>
+
+
 	
