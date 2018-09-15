@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 		if !session[:user_id]
 			erb :'users/new'
 		else
-			redirect to '/beers/'
+			redirect to '/beers'
 		end
 	end
 	
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
 				session[:user_id] = user.id
 				redirect '/beers'
 			else
-				redirect '/signup'
+				redirect '/login'
 			end
 	end
 	

@@ -1,12 +1,12 @@
 class BeersController < ApplicationController
 	get '/beers' do
-		#if logged_in?
+		if logged_in?
 			@user = current_user
 			@beers = Beer.all
 			erb :'beers/index'
-		#else
-			#redirect '/login'
-		#end
+		else
+			redirect '/login'
+		end
 	end
 	
 	get '/beers/new' do
@@ -26,6 +26,13 @@ class BeersController < ApplicationController
 		#else
 			#redirect '/login'
 		#end
+	end
+	
+	patch '/beers/:id' do
+	@beer = Beer.find_by_id(params[:id])
+	@beer.name = params[:name]
+	@beer.beer_type = params[:beer_type]
+	@beer.brewery = params[:brewery]
 	end
 	
 	post '/beers' do
