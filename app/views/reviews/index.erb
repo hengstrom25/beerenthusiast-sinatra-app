@@ -4,8 +4,16 @@
 
 <% @reviews.each do |review| %>
 
-<p>Name: <%=@review.beer.name%></p>
-<p>Date: <%=@review.date%></p>
-<p>Summary: <%=@review.summary%></p>
+<p>Name: <%=@beer.name%></p>
+<p>Date: <%=review.date%></p>
+<p>Summary: <%=review.summary%></p>
+<p><a href="/reviews/<%=review.id%>/show">Click to See Full Review</a></p>
+<p><a href="/reviews/<%=review.id%>/edit">Click to Edit</a></p>
+<form action="/reviews/<%=review.id%>" method="post">
+  <input type="hidden" id="hidden" name="_method" value="delete">
+  <input type="submit" value="Delete Review">
+</form>
+
+
 <p></p>
 <% end %>
