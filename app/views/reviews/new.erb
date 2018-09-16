@@ -1,0 +1,13 @@
+<h2>Add a Review for <%=@beer.name%></h2>
+
+<form action='/reviews/<%=@beer.id%>' method='POST'>
+	<label>Date</label>
+	<input type='text' name='date'><br>
+	<label>Summary</label>
+	<input type='text' name='summary'><br>
+	<label>Review</label>
+	<input type='text' name='review'><br>
+	<input type='submit' value="Submit">
+	
+</form>
+	

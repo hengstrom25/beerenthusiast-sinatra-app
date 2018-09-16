@@ -1,0 +1,11 @@
+<h1>Beer Reviews</h1>
+
+<p><a href="/reviews/<%=@beer.id%>/new">Add a new Review</a></p>
+
+<% @reviews.each do |review| %>
+
+<p>Name: <%=@review.beer.name%></p>
+<p>Date: <%=@review.date%></p>
+<p>Summary: <%=@review.summary%></p>
+<p></p>
+<% end %>

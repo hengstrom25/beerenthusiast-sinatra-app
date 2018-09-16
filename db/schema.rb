@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 3) do
   end
 
   create_table "reviews", force: :cascade do |t|
+    t.string "date"
+    t.string "summary"
     t.string "review"
     t.integer "beer_id"
   end
