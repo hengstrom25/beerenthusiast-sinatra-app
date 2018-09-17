@@ -51,7 +51,7 @@ class ReviewsController < ApplicationController
 		if logged_in? && current_user.id == @beer.user.id
 			erb :'/reviews/edit'
 		elsif logged_in?	
-			redirect '/reviews/index'
+			redirect '/reviews/' + @review.beer_id.to_s
 		else
 			redirect '/login'
 		end
@@ -68,12 +68,12 @@ class ReviewsController < ApplicationController
 	
 	delete '/reviews/:id' do
 		@review = Review.find_by_id(params[:id])
-		#if current_user.id == @beer.user.id
+		if current_user.id == @review.beer.user.id
 			@review.delete
 			redirect '/reviews/'+ @review.beer_id.to_s
-		#else
-			#redirect '/beers'
-		#end
+		else
+			redirect '/beers'
+		end
 	end
 
 end

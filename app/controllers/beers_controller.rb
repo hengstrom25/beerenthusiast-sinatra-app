@@ -2,7 +2,7 @@ class BeersController < ApplicationController
 	get '/beers' do
 		if logged_in?
 			@user = current_user
-			@beers = Beer.all
+			@beers = Beer.where(:user_id => current_user.id)
 			erb :'beers/index'
 		else
 			redirect '/login'
@@ -27,7 +27,7 @@ class BeersController < ApplicationController
 	end
 		
 	get '/beers/:id/edit' do
-		@beer = Beer.find(params[:id])
+		@beer = Beer.find_by_id(params[:id])
 		if logged_in? && current_user.id == @beer.user.id
 			erb :'beers/edit'
 		elsif logged_in?
