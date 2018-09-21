@@ -34,12 +34,16 @@ class ReviewsController < ApplicationController
 	
 	post '/reviews/:id' do
 		if logged_in?
-			user = current_user
-			@review = Review.create(date: params[:date], summary: params[:summary], review: params[:review])
-			@review.beer_id = params[:id]
-			@beer = Beer.find_by_id(params[:id])
-			@review.save
-			erb :'/reviews/show'
+			if params[:review] != ""
+				user = current_user
+				@review = Review.create(date: params[:date], summary: params[:summary], review: params[:review])
+				@review.beer_id = params[:id]
+				@beer = Beer.find_by_id(params[:id])
+				@review.save
+				erb :'/reviews/show'
+			else 
+				'/reviews/' + params[:id] + '/new?error=Review cannot be blank'
+			end
 		else
 			redirect "/login?error=You have to be logged in to write a new review."
 		end
@@ -59,14 +63,20 @@ class ReviewsController < ApplicationController
 	
 	patch '/reviews/:id' do
 		@review = Review.find_by_id(params[:id])
-		if logged_in? && current_user.id == @review.beer.user.id
-			@review.date = params[:date]
-			@review.summary = params[:summary]
-			@review.review = params[:review]
-			@review.save
-			redirect '/reviews/'+ @review.beer_id.to_s
-		elsif logged_in?
-			redirect '/reviews/' + @review.beer_id.to_s
+		if logged_in?
+			if current_user.id == @review.beer.user.id
+				if params[:review] != ""
+					@review.date = params[:date]
+					@review.summary = params[:summary]
+					@review.review = params[:review]
+					@review.save
+					redirect '/reviews/'+ @review.beer_id.to_s
+				else
+					redirect '/reviews/' + @review.beer_id.to_s + '?error=Review cannot be blank.'
+				end
+			else
+				redirect '/reviews/'+ @review.beer_id.to_s
+			end
 		else
 			redirect "/login?error=You have to be logged in to edit a review."
 		end

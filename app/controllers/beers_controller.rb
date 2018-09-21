@@ -41,16 +41,20 @@ class BeersController < ApplicationController
 	
 	patch '/beers/:id' do
 		@beer = Beer.find_by_id(params[:id])
-		if logged_in? && current_user.id == @beer.user.id && params[:name] != ""
-			@beer.name = params[:name]
-			@beer.beer_type = params[:beer_type]
-			@beer.brewery = params[:brewery]
-			@beer.save
-			redirect '/beers'
-		elsif logged_in? && current_user.id == @beer.user.id
-			redirect "/beers/" + params[:id] + "/edit?error=Beer name cannot be empty."
-		elsif logged_in?
-			redirect '/beers'
+		if logged_in?
+			if current_user.id == @beer.user.id 
+				if params[:name] != ""
+					@beer.name = params[:name]
+					@beer.beer_type = params[:beer_type]
+					@beer.brewery = params[:brewery]
+					@beer.save
+					redirect '/beers'
+				else 
+					redirect "/beers/" + params[:id] + "/edit?error=Beer name cannot be empty."
+				end
+			else
+				redirect '/beers'
+			end
 		else 
 			redirect "/login?error=You have to be logged in to edit a beer."
 		end	
