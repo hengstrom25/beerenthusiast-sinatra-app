@@ -7,7 +7,7 @@ class ReviewsController < ApplicationController
 			@reviews = Review.where(:beer_id => params[:id])
 			erb :'/reviews/index'
 		else	
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to see a review."
 		end
 	end
 	
@@ -18,7 +18,7 @@ class ReviewsController < ApplicationController
 			@beer = Beer.find_by_id(@review.beer_id)
 			erb :'/reviews/show'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to see a review."
 		end
 	end
 	
@@ -28,7 +28,7 @@ class ReviewsController < ApplicationController
 			@beer = Beer.find_by_id(params[:id])
 			erb :'/reviews/new'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to write a new review."
 		end
 	end
 	
@@ -41,29 +41,35 @@ class ReviewsController < ApplicationController
 			@review.save
 			erb :'/reviews/show'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to write a new review."
 		end
 	end
 	
 	get '/reviews/:id/edit' do
 		@review = Review.find_by_id(params[:id])
 		@beer = Beer.find_by_id(@review.beer_id)
-		if logged_in? && current_user.id == @beer.user.id
+		if logged_in? && current_user.id == @review.beer.user.id
 			erb :'/reviews/edit'
 		elsif logged_in?	
 			redirect '/reviews/' + @review.beer_id.to_s
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to edit a review."
 		end
 	end
 	
 	patch '/reviews/:id' do
 		@review = Review.find_by_id(params[:id])
-		@review.date = params[:date]
-		@review.summary = params[:summary]
-		@review.review = params[:review]
-		@review.save
-		redirect '/reviews/'+ @review.beer_id.to_s
+		if logged_in? && current_user.id == @review.beer.user.id
+			@review.date = params[:date]
+			@review.summary = params[:summary]
+			@review.review = params[:review]
+			@review.save
+			redirect '/reviews/'+ @review.beer_id.to_s
+		elsif logged_in?
+			redirect '/reviews/' + @review.beer_id.to_s
+		else
+			redirect "/login?error=You have to be logged in to edit a review."
+		end
 	end
 	
 	delete '/reviews/:id' do
@@ -71,8 +77,10 @@ class ReviewsController < ApplicationController
 		if current_user.id == @review.beer.user.id
 			@review.delete
 			redirect '/reviews/'+ @review.beer_id.to_s
+		elsif logged_in?
+			redirect '/reviews/' + @review.beer_id.to_s
 		else
-			redirect '/beers'
+			redirect "/login?error=You have to be logged in to delete a review."
 		end
 	end
 
