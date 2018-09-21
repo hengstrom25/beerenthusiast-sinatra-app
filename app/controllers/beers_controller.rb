@@ -11,6 +11,7 @@ class BeersController < ApplicationController
 	end
 	
 	get '/beers/new' do
+		@error_message = params[:error]
 		if logged_in?
 			erb :'beers/new'
 		else
@@ -68,7 +69,7 @@ class BeersController < ApplicationController
 			beer.save
 			redirect '/beers'
 		else
-			redirect "/beers?error=Beer name cannot be empty."
+			redirect "/beers/new?error=Beer name cannot be empty."
 		end
 	end
 	
