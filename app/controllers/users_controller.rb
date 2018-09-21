@@ -6,6 +6,7 @@ class UsersController < ApplicationController
 	end
 	
 	get '/signup' do
+		@error_message = params[:error]
 		if !session[:user_id]
 			erb :'users/new'
 		else
@@ -15,7 +16,7 @@ class UsersController < ApplicationController
 	
 	post '/signup' do
 		if params[:username] == "" || params[:password] == ""
-			redirect to '/signup'
+			redirect "/signup?error=You must enter a username and a password to sign up."
 		else
 			@user = User.create(:username => params[:username], :password => params[:password])
 			session[:user_id] = @user.id
