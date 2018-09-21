@@ -1,5 +1,6 @@
 class BeersController < ApplicationController
 	get '/beers' do
+		@error_message = params[:error]
 		if logged_in?
 			@user = current_user
 			@beers = Beer.where(:user_id => current_user.id)
@@ -27,6 +28,7 @@ class BeersController < ApplicationController
 	end
 		
 	get '/beers/:id/edit' do
+		@error_message = params[:error]
 		@beer = Beer.find_by_id(params[:id])
 		if logged_in? && current_user.id == @beer.user.id
 			erb :'beers/edit'
@@ -39,12 +41,14 @@ class BeersController < ApplicationController
 	
 	patch '/beers/:id' do
 		@beer = Beer.find_by_id(params[:id])
-		if logged_in? && current_user.id == @beer.user.id
+		if logged_in? && current_user.id == @beer.user.id && params[:name] != ""
 			@beer.name = params[:name]
 			@beer.beer_type = params[:beer_type]
 			@beer.brewery = params[:brewery]
 			@beer.save
 			redirect '/beers'
+		elsif logged_in? && current_user.id == @beer.user.id
+			redirect "/beers/" + params[:id] + "/edit?error=Beer name cannot be empty."
 		elsif logged_in?
 			redirect '/beers'
 		else 
@@ -54,10 +58,14 @@ class BeersController < ApplicationController
 	
 	post '/beers' do
 		user = current_user
-		beer = Beer.create(name: params[:name], beer_type: params[:beer_type], brewery: params[:brewery])
-		beer.user = current_user
-		beer.save
-		redirect '/beers'
+		if params[:name] != ""
+			beer = Beer.create(name: params[:name], beer_type: params[:beer_type], brewery: params[:brewery])
+			beer.user = current_user
+			beer.save
+			redirect '/beers'
+		else
+			redirect "/beers?error=Beer name cannot be empty."
+		end
 	end
 	
 	delete '/beers/:id' do
