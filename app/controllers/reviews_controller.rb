@@ -1,6 +1,7 @@
 class ReviewsController < ApplicationController
 	
 	get '/reviews/:id' do
+		@error_message = params[:error]
 		if logged_in?
 			@user = current_user
 			@beer = Beer.find_by_id(params[:id])
@@ -12,6 +13,7 @@ class ReviewsController < ApplicationController
 	end
 	
 	get '/reviews/:id/show' do
+		@error_message = params[:error]
 		if logged_in?
 			@user = current_user
 			@review = Review.find_by_id(params[:id])
@@ -50,6 +52,7 @@ class ReviewsController < ApplicationController
 	end
 	
 	get '/reviews/:id/edit' do
+		@error_message = params[:error]
 		@review = Review.find_by_id(params[:id])
 		@beer = Beer.find_by_id(@review.beer_id)
 		if logged_in? && current_user.id == @review.beer.user.id
@@ -72,7 +75,7 @@ class ReviewsController < ApplicationController
 					@review.save
 					redirect '/reviews/'+ @review.beer_id.to_s
 				else
-					redirect '/reviews/' + @review.beer_id.to_s + '?error=Review cannot be blank.'
+					redirect '/reviews/' + params[:id] + '/edit?error=Review cannot be blank.'
 				end
 			else
 				redirect '/reviews/'+ @review.beer_id.to_s
