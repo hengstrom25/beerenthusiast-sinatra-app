@@ -5,7 +5,7 @@ class BeersController < ApplicationController
 			@beers = Beer.where(:user_id => current_user.id)
 			erb :'beers/index'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to see your list of beers."
 		end
 	end
 	
@@ -13,7 +13,7 @@ class BeersController < ApplicationController
 		if logged_in?
 			erb :'beers/new'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to create a new beer."
 		end
 	end
 	
@@ -22,7 +22,7 @@ class BeersController < ApplicationController
 			@beer = Beer.find_by_id(params[:id])
 			erb :'beers/show'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to see a particular beer."
 		end
 	end
 		
@@ -33,17 +33,23 @@ class BeersController < ApplicationController
 		elsif logged_in?
 			redirect '/beers'
 		else
-			redirect '/login'
+			redirect "/login?error=You have to be logged in to edit a beer."
 		end
 	end
 	
 	patch '/beers/:id' do
 		@beer = Beer.find_by_id(params[:id])
-		@beer.name = params[:name]
-		@beer.beer_type = params[:beer_type]
-		@beer.brewery = params[:brewery]
-		@beer.save
-		redirect '/beers'
+		if logged_in? && current_user.id == @beer.user.id
+			@beer.name = params[:name]
+			@beer.beer_type = params[:beer_type]
+			@beer.brewery = params[:brewery]
+			@beer.save
+			redirect '/beers'
+		elsif logged_in?
+			redirect '/beers'
+		else 
+			redirect "/login?error=You have to be logged in to edit a beer."
+		end	
 	end
 	
 	post '/beers' do
@@ -59,8 +65,10 @@ class BeersController < ApplicationController
 		if current_user.id == @beer.user.id
 			@beer.delete
 			redirect '/beers'
-		else
+		elsif logged_in?
 			redirect '/beers'
+		else
+			redirect "/login?error=You have to be logged in to delete a beer."
 		end
 	end
 		
