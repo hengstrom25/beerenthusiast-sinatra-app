@@ -17,6 +17,8 @@ class UsersController < ApplicationController
 	post '/signup' do
 		if params[:username] == "" || params[:password] == ""
 			redirect "/signup?error=You must enter a username and a password to sign up."
+		elsif User.find_by(:username => params[:username]) != nil
+			redirect "/signup?error=That username already exists. Please select another."
 		else
 			@user = User.create(:username => params[:username], :password => params[:password])
 			session[:user_id] = @user.id
